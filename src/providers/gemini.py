@@ -46,7 +46,7 @@ class GeminiProvider(BaseProvider):
         return AIResponse(
             answer=answer,
             provider=Provider.GEMINI,
-            model_name=model,
+            model_name=ModelName(model),
             latency_ms=round(latency, 2),
             prompt_tokens=response.usage.prompt_tokens,
             completion_tokens=response.usage.completion_tokens,
