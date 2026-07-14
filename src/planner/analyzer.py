@@ -107,7 +107,7 @@ class QueryAnalyzer:
             detected_topics.append("AI")
 
         #complexity scoring 
-        complexity_score = 1
+        complexity_score = 1                                                                        
 
         reasoning_trace = []
 
