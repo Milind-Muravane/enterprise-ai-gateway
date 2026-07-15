@@ -10,8 +10,6 @@ from typing import Optional
 
 from pydantic import BaseModel, Field
 
-
-
 # Enums
 class ComplexityLevel(str, Enum):
     SIMPLE = "SIMPLE"
@@ -121,3 +119,23 @@ class AIResponse(BaseModel):
     cache_hit: bool = False
     execution_plan: Optional[ExecutionPlan] = None
     routing_decision: Optional[RoutingDecision] = None
+
+from datetime import datetime , UTC
+
+class TelemetryRecord(BaseModel):
+    provider : Provider
+    model_name : ModelName
+    latency_ms : float
+    prompt_tokens : int
+    completion_tokens : int
+    total_tokens : int
+    success : bool
+    timestamp : datetime = Field(default_factory = lambda: datetime.now(UTC))
+
+class ProviderStatistics(BaseModel):
+    provider : Provider
+    request_count : int
+    average_latency_ms : float
+    average_total_tokens : float
+    success_rate : float
+    
