@@ -5,34 +5,58 @@ Chooses the most appropriate provider and model
 based on the execution plan.
 
 Version 1:
-Rule-based routing.
+Rule-based routing with telemetry ranking.
 
 Version 2:
-Telemetry-aware adaptive routing.
+Adaptive routing using live telemetry.
 """
 
-from src.schemas import(
-    ExecutionPlan, RoutingDecision, Provider, ModelName,
+from src.schemas import (
+    ExecutionPlan,
+    RoutingDecision,
+    Provider,
+    ModelName,
 )
 
+
+from src.telemetry.manager import TelemetryManager
+
+
 class AdaptiveRouter:
-    def select_provider(self, plan: ExecutionPlan) -> RoutingDecision:
+
+    def __init__(
+        self,
+        telemetry : TelemetryManager,
+    ):
+        self.telemetry = telemetry
+
+    def select_provider(
+        self,
+        plan: ExecutionPlan,
+    ) -> RoutingDecision:
+
         reasons = []
 
-        #for the complex requests
-        if (plan.requires_reasoning or plan.priority == "QUALITY" or plan.complextiy_scores >= 4):
+        # For the Complex Requests
+        if (
+            plan.requires_reasoning
+            or plan.priority == "QUALITY"
+            or plan.complexity_score >= 4
+        ):
+
             reasons.append("Complex reasoning request.")
-            reasons.append("Using Gemini Pro.")
+            reasons.append("Using Gemini Flash (Free Tier).")
 
             return RoutingDecision(
-                provider = Provider.GEMINI,
-                model_name = ModelName.GEMINI_PRO,
-                routing_reason = reasons,
-                expected_latency_ms = 2500,
+                provider=Provider.GEMINI,
+                model_name=ModelName.GEMINI_FLASH,
+                routing_reason=reasons,
+                expected_latency_ms=900,
             )
 
-        # for the web search
+        # Web Search
         if plan.use_web_search:
+
             reasons.append("Requires current information.")
             reasons.append("Using Gemini Flash.")
 
@@ -42,14 +66,29 @@ class AdaptiveRouter:
                 routing_reason=reasons,
                 expected_latency_ms=900,
             )
-        
-        #for the  default conditions
+
+       
+        # Simple Request
+        best_provider = self.telemetry.get_fastest_provider()
+
+        if best_provider == Provider.GROQ:
+
+            reasons.append("Simple request.")
+            reasons.append("Groq currently has the lowest average latency.")
+
+            return RoutingDecision(
+                provider=Provider.GROQ,
+                model_name=ModelName.LLAMA_3_1_8B,
+                routing_reason=reasons,
+                expected_latency_ms=300,
+            )
+
         reasons.append("Simple request.")
-        reasons.append("Using Groq for lowest latency.")
+        reasons.append("Gemini currently has the lowest average latency.")
 
         return RoutingDecision(
-            provider=Provider.GROQ,
-            model_name=ModelName.LLAMA_3_1_8B,
+            provider=Provider.GEMINI,
+            model_name=ModelName.GEMINI_FLASH,
             routing_reason=reasons,
-            expected_latency_ms=300,
+            expected_latency_ms=900,
         )

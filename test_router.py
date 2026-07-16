@@ -3,6 +3,7 @@ from src.planner.estimator import RequestEstimator
 from src.planner.planner import ExecutionPlanner
 from src.router import AdaptiveRouter
 
+
 query = (
     "Compare today's AI news with last week's announcements "
     "and recommend which LLM should be used."
