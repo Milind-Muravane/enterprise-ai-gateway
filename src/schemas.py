@@ -139,3 +139,7 @@ class ProviderStatistics(BaseModel):
     average_total_tokens : float
     success_rate : float
     
+class CacheResult(BaseModel):
+    hit : bool
+    answer : str | None = None
+    distance : float | None = None
