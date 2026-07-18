@@ -50,6 +50,7 @@ class Gateway:
         cache_result = self.cache.search(question)
         
         if cache_result.hit:
+            print("Cache HIT!")
             return AIResponse(
                 answer = cache_result.answer,
                 provider=Provider.GROQ, 
@@ -58,6 +59,8 @@ class Gateway:
                 estimated_cost=CostTier.LOW,
                 cache_hit=True,
             )
+        
+        print("Cache MISS!")
 
         # Analyze
         analysis = self.analyzer.analyze(question)
