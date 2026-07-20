@@ -1,9 +1,14 @@
 from src.rag.loader import DocumentLoader
 from src.rag.splitter import DocumentSplitter
+from src.rag.vectorstore import DocumentVectorStore
 
 loader = DocumentLoader()
 
 splitter = DocumentSplitter()
+
+store = DocumentVectorStore()
+
+store.clear()
 
 text = loader.load(
     "data/uploads/TravelPolicy.txt"
@@ -11,7 +16,9 @@ text = loader.load(
 
 chunks = splitter.split(text)
 
-for i, chunk in enumerate(chunks):
-    print(f"\nChunk {i+1}")
-    print("=" * 60)
-    print(chunk)
+store.add_document(
+    chunks=chunks,
+    source="TravelPolicy.txt",
+)
+
+print(f"Stored {len(chunks)} chunks.")
