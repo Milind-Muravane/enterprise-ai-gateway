@@ -143,3 +143,12 @@ class CacheResult(BaseModel):
     hit : bool
     answer : str | None = None
     distance : float | None = None
+
+class RetrievedChunk(BaseModel):
+    text: str
+    source: str
+    distance: float
+
+
+class RetrievalResult(BaseModel):
+    chunks: list[RetrievedChunk]
