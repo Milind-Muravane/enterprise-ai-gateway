@@ -152,3 +152,12 @@ class RetrievedChunk(BaseModel):
 
 class RetrievalResult(BaseModel):
     chunks: list[RetrievedChunk]
+
+class SearchResult(BaseModel):
+    title : str
+    url : str
+    content : str
+
+class WebSearchResult(BaseModel):
+    query : str
+    results : list[SearchResult]

@@ -24,6 +24,8 @@ from src.schemas import (
 from src.rag.retriever import DocumentRetriever
 from src.rag.prompt_builder import PromptBuilder
 
+from src.websearch.tavily import TavilySearch
+
 
 class Gateway:
 
@@ -85,7 +87,7 @@ class Gateway:
             estimate=estimate,
         )
 
-        # Prompt Building
+        # RAG Part Prompt Building
         prompt  = question 
         if plan.use_rag:
             print("Retrieving company documents...please wait!")
@@ -94,6 +96,12 @@ class Gateway:
 
             prompt = self.prompt_builder.build(question= question, retrieval=retrieval,)
 
+        # Web Search
+        elif plan.use_web_search:
+            print("Searching on the web... Please wait!")
+            search_result = self.web_search.search(question)
+
+            prompt = self.prompt_builder.build_web_prompt(question = question,search_result=search_result)
 
         # Routing
         decision = self.router.select_provider(plan)
