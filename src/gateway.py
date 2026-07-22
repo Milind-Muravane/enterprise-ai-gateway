@@ -21,6 +21,9 @@ from src.schemas import (
     TelemetryRecord,
 )
 
+from src.rag.retriever import DocumentRetriever
+from src.rag.prompt_builder import PromptBuilder
+
 
 class Gateway:
 
@@ -40,6 +43,12 @@ class Gateway:
 
         # Cache
         self.cache = ChromaCache()
+
+        # Document Retriever
+        self.retriever = DocumentRetriever()
+
+        # Prompt Builder
+        self.prompt_builder = PromptBuilder()
 
     def process(
         self,
@@ -76,6 +85,15 @@ class Gateway:
             estimate=estimate,
         )
 
+        # Prompt Building
+        prompt  = question 
+        if plan.use_rag:
+            print("Retrieving company documents...please wait!")
+
+            retrieval = self.retriever.retrieve(question)
+
+            prompt = self.prompt_builder.build(question= question, retrieval=retrieval,)
+
 
         # Routing
         decision = self.router.select_provider(plan)
@@ -87,7 +105,7 @@ class Gateway:
 
         # Generate Response
         response = provider.generate(
-            prompt=question,
+            prompt=prompt,
             model=decision.model_name,
         )
 
