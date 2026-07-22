@@ -31,11 +31,11 @@ class PromptBuilder:
                 {question}
         """
 
-        print("-"* 50)
+        print("="* 80)
         print("RAG Context")
-        print("-"* 50)
+        print("="* 80)
         print(context)
-        print("-"* 50)
+        print("="* 80)
 
         return prompt
     
@@ -53,22 +53,37 @@ class PromptBuilder:
         prompt = f"""
                 You are an AI assistant.
 
-                Answer ONLY using the web search results below.
+                You MUST answer ONLY using the web search results below.
 
-                If the answer cannot be found,
-                say that the information is unavailable.
+                Do NOT say you don't have internet access.
+
+                Do NOT mention knowledge cutoff.
+
+                Treat the search results as the latest available information.
+
+                If the answer is not contained in the search results,
+                respond with:
+                "I could not find this information in the retrieved web results."
 
                 ----------------------------------------
-
-                Web Search Results
+                WEB SEARCH RESULTS
 
                 {context}
 
                 ----------------------------------------
 
-                Question:
+                QUESTION
 
                 {question}
+
+                ----------------------------------------
+
+                Provide a concise answer.
                 """
+        print("=" * 80)
+        print("WEB PROMPT")
+        print("=" * 80)
+        print(prompt)
+        print("=" * 80)
 
         return prompt

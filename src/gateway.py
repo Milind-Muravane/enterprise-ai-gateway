@@ -19,6 +19,7 @@ from src.cache.chroma import ChromaCache
 from src.schemas import (
     AIResponse,
     TelemetryRecord,
+    Provider, ModelName,CostTier
 )
 
 from src.rag.retriever import DocumentRetriever

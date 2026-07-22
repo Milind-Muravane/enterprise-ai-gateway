@@ -3,7 +3,7 @@ from src.gateway import Gateway
 gateway = Gateway()
 
 response = gateway.process(
-    "What are today's latest AI news?"
+    "Latest NVIDIA Blackwell GPU announcements"
 )
 
 print()
