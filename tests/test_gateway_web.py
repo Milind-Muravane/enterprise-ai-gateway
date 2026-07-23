@@ -3,7 +3,7 @@ from src.gateway import Gateway
 gateway = Gateway()
 
 response = gateway.process(
-    "Latest NVIDIA Blackwell GPU announcements"
+    ""
 )
 
 print()

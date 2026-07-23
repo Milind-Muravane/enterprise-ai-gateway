@@ -9,6 +9,7 @@ from enum import Enum
 from typing import Optional
 
 from pydantic import BaseModel, Field
+from datetime import datetime , UTC
 
 # Enums
 class ComplexityLevel(str, Enum):
@@ -121,7 +122,7 @@ class AIResponse(BaseModel):
     execution_plan: Optional[ExecutionPlan] = None
     routing_decision: Optional[RoutingDecision] = None
 
-from datetime import datetime , UTC
+
 
 class TelemetryRecord(BaseModel):
     provider : Provider
@@ -162,3 +163,18 @@ class SearchResult(BaseModel):
 class WebSearchResult(BaseModel):
     query : str
     results : list[SearchResult]
+
+class ProviderScore(BaseModel):
+    """
+    Score assigned to one provider-model pair.
+    """
+    provider : Provider
+    model_name : ModelName
+    total_score : float
+    score_breakdown : dict[str, float]
+
+class ProviderRanking(BaseModel):
+    """
+    Ranked list of providers.
+    """
+    rankings : list[ProviderScore]
