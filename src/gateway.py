@@ -53,6 +53,18 @@ class Gateway:
         # Prompt Builder
         self.prompt_builder = PromptBuilder()
 
+    def _fallback_provider(self,provider : Provider)->Provider:
+        """
+        Returns the fallback provider.
+        """
+        if provider == Provider.GEMINI:
+            return Provider.GROQ
+        return Provider.GEMINI
+
+
+
+
+
     def process(
         self,
         question: str,
@@ -65,9 +77,12 @@ class Gateway:
             print("Cache HIT!")
             return AIResponse(
                 answer = cache_result.answer,
-                provider=Provider.GROQ, 
-                model_name=ModelName.LLAMA_3_1_8B, 
+                provider=Provider.CACHE, 
+                model_name=None, 
                 latency_ms=0,
+                prompt_tokens = 0,
+                completion_tokens = 0,
+                total_tokens = 0,
                 estimated_cost=CostTier.LOW,
                 cache_hit=True,
             )
@@ -112,12 +127,25 @@ class Gateway:
         provider = get_provider(decision.provider)
 
 
-        # Generate Response
-        response = provider.generate(
-            prompt=prompt,
-            model=decision.model_name,
-        )
+        # Generate Response (Using fallback provider strategy that gives response from another model if one fails)
+        try:
+            response = provider.generate(prompt = prompt, model = decision.model_name,)
+        except Exception as e:
+            print(f"Primary model failed!!! {e}")
+            fallback_provider = self._fallback_provider(decision.provider)
+            print(f"Switching now to {fallback_provider.value}")
+            provider = get_provider(fallback_provider
+            )
 
+        if fallback_provider == Provider.GEMINI:
+            fallback_model = ModelName.GEMINI_FLASH
+        else:
+            fallback_model = ModelName.LLAMA_3_1_8B
+        
+        response = provider.generate(prompt = prompt, model = fallback_model,)
+        response.provider = fallback_provider
+        response.model_name = fallback_model
+         
         # Saving new responses
         self.cache.add(
             question = question,

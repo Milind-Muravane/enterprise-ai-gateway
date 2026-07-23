@@ -3,7 +3,7 @@ from src.websearch.tavily import TavilySearch
 search = TavilySearch()
 
 result = search.search(
-    "Latest AI news today"
+    "Latest news in India protest today 23/07/2026"
 )
 
 print("=" * 70)

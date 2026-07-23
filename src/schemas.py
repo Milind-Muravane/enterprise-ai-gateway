@@ -24,6 +24,7 @@ class CostTier(str, Enum):
 
 
 class Provider(str, Enum):
+    CACHE = "Cache"
     GEMINI = "Gemini"
     GROQ = "Groq"
 
@@ -109,7 +110,7 @@ class RoutingDecision(BaseModel):
 class AIResponse(BaseModel):
     answer: str
     provider: Provider
-    model_name: ModelName
+    model_name: Optional[ModelName] = None
     latency_ms: float
     prompt_tokens: int = 0
     completion_tokens: int = 0
