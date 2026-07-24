@@ -40,4 +40,6 @@ class AdaptiveRouter:
             model_name = best.model_name,
             routing_reason = ["Selected by adaptive scoring engine."],
             expected_latency_ms = 0,
+            score = best.total_score,
+            score_breakdown = best.score_breakdown,
         )

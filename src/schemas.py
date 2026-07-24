@@ -103,7 +103,9 @@ class RoutingDecision(BaseModel):
     provider: Provider
     model_name: ModelName
     routing_reason: list[str]
-    expected_latency_ms: int
+    expected_latency_ms: float
+    score: float
+    score_breakdown: dict[str, float]
 
 
 
