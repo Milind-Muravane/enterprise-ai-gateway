@@ -12,7 +12,7 @@ from src.schemas import (
 )
 
 from src.router.catalog import PROVIDER_CATALOG
-from src.router.weights import ROUTING_WEIGHTS
+from src.router.strategy import WeightStrategy
 
 from src.telemetry.manager import TelemetryManager
 
@@ -22,6 +22,8 @@ class ProviderScorer:
     def __init__(self):
 
         self.telemetry = TelemetryManager()
+
+        self.strategy = WeightStrategy()
 
     def score(
         self,
@@ -33,52 +35,51 @@ class ProviderScorer:
         Calculates the final provider score.
         """
 
+        # Generate routing weights once
+        weights = self.strategy.generate(plan)
+
         capability = self._capability_score(
             provider,
             model,
             plan,
+            weights,
         )
 
         reasoning = self._reasoning_score(
             provider,
             model,
             plan,
+            weights,
         )
 
         performance = self._performance_score(
             provider,
             model,
+            plan,
+            weights,
         )
 
         cost = self._cost_score(
             provider,
             model,
+            plan,
+            weights,
         )
 
         breakdown = {
-
             "capability": capability,
-
             "reasoning": reasoning,
-
             "performance": performance,
-
             "cost": cost,
-
         }
 
         total = sum(breakdown.values())
 
         return ProviderScore(
-
             provider=provider,
-
             model_name=model,
-
             total_score=total,
-
             score_breakdown=breakdown,
-
         )
 
     # ----------------------------------------------------
@@ -102,30 +103,26 @@ class ProviderScorer:
         provider: Provider,
         model: ModelName,
         plan: ExecutionPlan,
+        weights: dict,
     ) -> float:
 
         caps = self._capabilities(provider, model)
 
-        weights = ROUTING_WEIGHTS
-
         score = 0.0
 
         if plan.requires_reasoning:
-
             score += (
                 caps["reasoning"]
                 * weights["reasoning"]
             )
 
         if plan.use_web_search:
-
             score += (
                 caps["freshness"]
                 * weights["freshness"]
             )
 
         if plan.use_rag:
-
             score += (
                 caps["context"]
                 * weights["context"]
@@ -142,6 +139,7 @@ class ProviderScorer:
         provider: Provider,
         model: ModelName,
         plan: ExecutionPlan,
+        weights: dict,
     ) -> float:
 
         caps = self._capabilities(provider, model)
@@ -151,7 +149,8 @@ class ProviderScorer:
         return (
             caps["reasoning"]
             * complexity
-            * 0.5
+            * weights["reasoning"]
+            * 0.1
         )
 
     # ----------------------------------------------------
@@ -162,6 +161,8 @@ class ProviderScorer:
         self,
         provider: Provider,
         model: ModelName,
+        plan: ExecutionPlan,
+        weights: dict,
     ) -> float:
 
         try:
@@ -171,8 +172,6 @@ class ProviderScorer:
         except Exception:
 
             return 0.0
-
-        weights = ROUTING_WEIGHTS
 
         score = 0.0
 
@@ -189,7 +188,7 @@ class ProviderScorer:
                 * weights["performance"]
             )
 
-        # Success rate
+        # Success rate (0-1 -> 0-10)
 
         score += (
             stats.success_rate
@@ -207,11 +206,13 @@ class ProviderScorer:
         self,
         provider: Provider,
         model: ModelName,
+        plan: ExecutionPlan,
+        weights: dict,
     ) -> float:
 
         caps = self._capabilities(provider, model)
 
         return (
             caps["cost_efficiency"]
-            * ROUTING_WEIGHTS["cost"]
+            * weights["cost"]
         )
