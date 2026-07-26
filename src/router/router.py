@@ -7,10 +7,11 @@ from src.router.scorer import ProviderScorer
 from src.router.ranking import ProviderRanker
 
 from src.schemas import (ExecutionPlan, RoutingDecision, Provider, ModelName,)
+from src.telemetry.manager import TelemetryManager
 
 class AdaptiveRouter:
-    def __init__(self):
-        self.scorer = ProviderScorer()
+    def __init__(self,telemetry: TelemetryManager,):
+        self.scorer = ProviderScorer(telemetry)
         self.ranker = ProviderRanker()
 
     def select_provider(self, plan: ExecutionPlan,)-> RoutingDecision:

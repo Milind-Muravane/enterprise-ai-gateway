@@ -180,3 +180,12 @@ class ProviderRanking(BaseModel):
     Ranked list of providers.
     """
     rankings : list[ProviderScore]
+
+class HybridContext(BaseModel):
+    """
+    Combined context from multiple knowledge sources.
+    """
+    enterprise_context : str = ""
+    web_context : str = ""
+    enterprise_sources: list[str] = []
+    web_sources : list[str] = []

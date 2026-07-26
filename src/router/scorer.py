@@ -19,9 +19,9 @@ from src.telemetry.manager import TelemetryManager
 
 class ProviderScorer:
 
-    def __init__(self):
+    def __init__(self,telemetry : TelemetryManager,):
 
-        self.telemetry = TelemetryManager()
+        self.telemetry = telemetry
 
         self.strategy = WeightStrategy()
 
@@ -144,7 +144,7 @@ class ProviderScorer:
 
         caps = self._capabilities(provider, model)
 
-        complexity = plan.complextiy_scores
+        complexity = plan.complexity_score
 
         return (
             caps["reasoning"]

@@ -28,7 +28,8 @@ class AdaptiveRouter:
         self,
         telemetry : TelemetryManager,
     ):
-        self.telemetry = telemetry
+        self.scorer = ProviderScorer(telemertry)
+        self.ranker = ProviderRanker()
 
     def select_provider(
         self,
