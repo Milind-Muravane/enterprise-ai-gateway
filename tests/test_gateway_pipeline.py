@@ -8,17 +8,17 @@ questions = [
     # ----------------------------
     # Simple Question
     # ----------------------------
-    "Hello!",
+    "Heyyyy there!",
 
     # ----------------------------
     # Enterprise RAG
     # ----------------------------
-    "Who is allowed to travel in Business Class according to company policy?",
+    "According to our corporate travel policy, who is eligible for Business Class travel?",
 
     # ----------------------------
     # Web Search
     # ----------------------------
-    "Latest AI news today",
+    "What are the latest AI developments today?",
 
     # ----------------------------
     # Hybrid Retrieval

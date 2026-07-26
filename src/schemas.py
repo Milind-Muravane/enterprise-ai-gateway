@@ -39,6 +39,10 @@ class ModelName(str, Enum):
     LLAMA_3_3_70B = "llama-3.3-70b-versatile"
     LLAMA_3_1_8B = "llama-3.1-8b-instant"
 
+class Priority(str, Enum):
+    FAST = "FAST"
+    BALANCED = "BALANCED"
+    QUALITY = "QUALITY"
 
 
 # Request Models
@@ -87,7 +91,7 @@ class ExecutionPlan(BaseModel):
     estimated_input_tokens: int
     estimated_output_tokens: int
     estimated_latency_ms: int
-    priority: str
+    priority: Priority
     complexity_score: int
     requires_reasoning: bool
     reasoning_trace: list[str]
@@ -189,3 +193,12 @@ class HybridContext(BaseModel):
     web_context : str = ""
     enterprise_sources: list[str] = []
     web_sources : list[str] = []
+
+class PlanningDecision(BaseModel):
+    use_rag: bool
+    use_web_search: bool
+    requires_reasoning: bool
+    complexity_score: int
+    priority: Priority
+    confidence: Optional[float] = None
+    reasoning_trace: list[str]

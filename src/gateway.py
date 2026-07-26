@@ -19,6 +19,8 @@ from src.cache.chroma import ChromaCache
 from src.retrieval.hybrid import HybridRetriever
 from src.prompt_builder import PromptBuilder
 
+from src.planner.ai_planner import AIPlanner
+
 from src.schemas import (
     AIResponse,
     Provider,
@@ -35,7 +37,9 @@ class Gateway:
         # Planning
         self.analyzer = QueryAnalyzer()
         self.estimator = RequestEstimator()
+        self.ai_planner = AIPlanner()
         self.planner = ExecutionPlanner()
+        
 
         # Telemetry
         self.telemetry = TelemetryManager()
@@ -95,15 +99,25 @@ class Gateway:
 
         print("Cache MISS!!!")
 
-        # Analyze
-        analysis = self.analyzer.analyze(question)
-        # Estimate
-        estimate = self.estimator.estimate(analysis)
+        try:
+            print("Using AI Planner...")
 
+            plan = self.ai_planner.plan(question)
 
-        # Planning
-        plan = self.planner.create_plan(  analysis=analysis,estimate=estimate,)
+        except Exception as e:
 
+            print(f"AI Planner failed: {e}")
+
+            print("Falling back to rule-based planner...")
+
+            analysis = self.analyzer.analyze(question)
+
+            estimate = self.estimator.estimate(analysis)
+
+            plan = self.planner.create_plan(
+                analysis=analysis,
+                estimate=estimate,
+            )
         # Hybrid Retrieval
         prompt = question
 
