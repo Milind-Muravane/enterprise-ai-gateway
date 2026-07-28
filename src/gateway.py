@@ -149,6 +149,12 @@ class Gateway:
                 model=decision.model_name,
             )
 
+            # No fallback used
+            decision.actual_provider = decision.provider
+            decision.actual_model = decision.model_name
+            decision.fallback_used = False
+
+
         except Exception as e:
 
             print(f"Primary provider failed: {e}")
@@ -177,6 +183,11 @@ class Gateway:
                 prompt=prompt,
                 model=fallback_model,
             )
+
+            # Fallback metadata
+            decision.actual_provider = fallback_provider
+            decision.actual_model = fallback_model
+            decision.fallback_used = True
 
             response.provider = fallback_provider
 

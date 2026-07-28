@@ -110,6 +110,9 @@ class RoutingDecision(BaseModel):
     expected_latency_ms: float
     score: float
     score_breakdown: dict[str, float]
+    actual_provider: Provider | None = None
+    actual_model: ModelName | None = None
+    fallback_used: bool = False
 
 
 

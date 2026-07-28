@@ -167,10 +167,12 @@ class ProviderScorer:
 
         try:
 
-            stats = self.telemetry.statistics(provider)
-
+            stats = self.telemetry.get_statistics(provider)
+            
         except Exception:
+            return 0.0
 
+        if stats.request_count == 0:
             return 0.0
 
         score = 0.0

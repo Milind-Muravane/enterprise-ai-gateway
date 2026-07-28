@@ -5,6 +5,7 @@ Generates routing weights based on
 the execution plan.
 """
 from src.schemas import ExecutionPlan
+from src.schemas import Priority
 
 class WeightStrategy:
     def generate(self,plan:ExecutionPlan,)->dict:
@@ -28,6 +29,6 @@ class WeightStrategy:
             weights['freshness'] = 5.0
         
         # Highly imp request
-        if plan.priority == "QUALITY":
+        if plan.priority == Priority.QUALITY:
             weights['performance'] = 4.0
         return weights

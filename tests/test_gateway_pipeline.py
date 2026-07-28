@@ -8,22 +8,21 @@ questions = [
     # ----------------------------
     # Simple Question
     # ----------------------------
-    "Heyyyy there!",
+    "Hie Namaste!!! how's your day?",
 
     # ----------------------------
     # Enterprise RAG
     # ----------------------------
-    "According to our corporate travel policy, who is eligible for Business Class travel?",
-
+    "Does our internal travel handbook permit reimbursement for overnight accommodation booked through third-party websites?",
     # ----------------------------
     # Web Search
     # ----------------------------
-    "What are the latest AI developments today?",
+    "What significant cybersecurity incidents were reported worldwide in the last 48 hours?",
 
     # ----------------------------
     # Hybrid Retrieval
     # ----------------------------
-    "According to our travel policy, can I travel Business Class to Germany and are there any recent visa changes?",
+    "Our procurement policy explains laptop purchasing rules. Are there any newly announced import regulations affecting laptop purchases in India?",
 
 ]
 
@@ -77,4 +76,22 @@ for i, question in enumerate(questions, start=1):
     print("Answer")
     print(response.answer)
 
+    print()
+
+    print("\n--- DEBUG ---")
+    print("Provider:", response.provider)
+    print("Cache Hit:", response.cache_hit)
+    print("Routing Decision:", response.routing_decision)
+    print("--------------")
+
+    print("Planned Provider:", response.routing_decision.provider)
+    
+    print()
+
+    print("Actual Provider:", response.routing_decision.actual_provider)
+   
+    print()
+   
+    print("Fallback Used:", response.routing_decision.fallback_used)
+    
     print()
