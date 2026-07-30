@@ -175,31 +175,31 @@ Built-in debugging utilities display:
 
 ---
 
-# 📂 Project Structure
+## 📂 Project Structure
 
-```
+```text
 enterprise-ai-gateway/
 
+├── 📂 src
+│   ├── 📂 analyzer
+│   ├── 📂 planner
+│   ├── 📂 router
+│   ├── 📂 providers
+│   ├── 📂 telemetry
+│   ├── 📂 cache
+│   ├── 📂 gateway
+│   ├── 📂 utils
+│   └── 📄 schemas.py
 │
-├── src/
-│   ├── analyzer/
-│   ├── planner/
-│   ├── router/
-│   ├── providers/
-│   ├── cache/
-│   ├── telemetry/
-│   ├── gateway/
-│   ├── utils/
-│   └── schemas.py
+├── 📂 tests
+├── 📂 assets
+│   ├── 🖼️ banner.png
+│   └── 🖼️ architecture.png
 │
-├── tests/
-│
-├── app.py
-├── requirements.txt
-└── README.md
+├── 📄 app.py
+├── 📄 requirements.txt
+└── 📄 README.md
 ```
-
----
 
 # 🔄 Execution Pipeline
 
