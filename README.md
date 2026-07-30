@@ -374,6 +374,9 @@ This project is licensed under the MIT License.
 B.Tech Computer Science (AI & Data Science)  
 MIT World Peace University
 
+B.S. in Data Science (Online Degree Programme -- Currently at Diploma level)
+IIT Madras
+
 Passionate about Artificial Intelligence, Machine Learning, Agentic AI, and Enterprise AI Systems.
 
 ---
