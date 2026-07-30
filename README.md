@@ -6,11 +6,13 @@
 
 > An intelligent, modular AI Gateway that analyses user queries, plans execution, adaptively routes requests across multiple LLM providers, leverages telemetry for smarter decisions, and provides explainable routing with enterprise-ready architecture.
 
-![Python](https://img.shields.io/badge/Python-3.11+-blue?logo=python)
-![Status](https://img.shields.io/badge/Status-v1.0-success)
-![License](https://img.shields.io/badge/License-MIT-green)
+![Python](https://img.shields.io/badge/Python-3.11+-3776AB?logo=python&logoColor=white)
+![Pydantic](https://img.shields.io/badge/Pydantic-2.x-E92063)
+![LiteLLM](https://img.shields.io/badge/LiteLLM-Multi--LLM-blueviolet)
+![Gemini](https://img.shields.io/badge/Google-Gemini-4285F4?logo=google)
+![Groq](https://img.shields.io/badge/Groq-LLM-F55036)
+![Version](https://img.shields.io/badge/Version-v1.0-success)
 ![Architecture](https://img.shields.io/badge/Architecture-Modular-orange)
-
 ---
 
 # 📖 Overview
