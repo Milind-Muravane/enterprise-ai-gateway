@@ -147,6 +147,7 @@ Built-in debugging utilities display:
        width="100%">
 </p>
 
+--- 
 The Enterprise AI Gateway follows a modular, provider-agnostic architecture. A user request is analysed, transformed into an execution plan, adaptively routed to the most suitable LLM provider, and continuously improved through telemetry and semantic caching.
 ---
 
