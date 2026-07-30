@@ -38,3 +38,10 @@ class TelemetryManager:
 
     def get_statistics(self, provider : Provider):
         return self.statistics.get_provider_statistics(provider)
+
+    def predict_latency(self,provider: Provider,model_name: ModelName,) -> float:
+
+        return self.statistics.predict_latency(
+            provider=provider,
+            model_name=model_name,
+        )

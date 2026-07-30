@@ -1,97 +1,136 @@
 from src.gateway import Gateway
 
-
 gateway = Gateway()
 
 questions = [
 
-    # ----------------------------
-    # Simple Question
-    # ----------------------------
-    "Hie Namaste!!! how's your day?",
+    # ============================================================
+    # FAST
+    # ============================================================
+    "What is one interesting fact about Saturn?",
 
-    # ----------------------------
-    # Enterprise RAG
-    # ----------------------------
-    "Does our internal travel handbook permit reimbursement for overnight accommodation booked through third-party websites?",
-    # ----------------------------
-    # Web Search
-    # ----------------------------
-    "What significant cybersecurity incidents were reported worldwide in the last 48 hours?",
+    # ============================================================
+    # RAG
+    # ============================================================
+    "According to our employee handbook, are meals during official business travel reimbursable, and are there any spending limits?",
 
-    # ----------------------------
-    # Hybrid Retrieval
-    # ----------------------------
-    "Our procurement policy explains laptop purchasing rules. Are there any newly announced import regulations affecting laptop purchases in India?",
+    # ============================================================
+    # WEB
+    # ============================================================
+    "What are the latest developments in quantum computing announced this week?",
 
+    # ============================================================
+    # HYBRID (RAG + WEB + REASONING)
+    # ============================================================
+    "Compare our company's international travel policy with the latest Schengen visa requirements for Indian citizens travelling for business.",
+
+    # ============================================================
+    # REASONING
+    # ============================================================
+    "Recommend improvements to our remote work policy based on the latest cybersecurity best practices.",
+
+    # ============================================================
+    # STRESS TEST
+    # ============================================================
+    "An employee is travelling from Bengaluru to Germany for a two-week client engagement. Using our company travel policy together with the latest visa requirements, baggage regulations and reimbursement rules, prepare a complete travel plan and justify every recommendation."
 ]
+
 
 for i, question in enumerate(questions, start=1):
 
     print("\n")
-    print("=" * 90)
+    print("=" * 100)
     print(f"TEST {i}")
-    print("=" * 90)
+    print("=" * 100)
 
-    print()
-    print("Question:")
+    print("\nQuestion:")
     print(question)
 
     print("\nProcessing...\n")
 
     response = gateway.process(question)
 
-    print("=" * 90)
+    print("=" * 100)
 
-    print("Provider")
+    print("Provider:")
     print(response.provider)
 
-    print()
-
-    print("Model")
+    print("\nModel:")
     print(response.model_name)
 
-    print()
-
-    print("Cache Hit")
+    print("\nCache Hit:")
     print(response.cache_hit)
 
-    print()
-
-    print("Latency")
+    print("\nLatency (ms):")
     print(response.latency_ms)
 
-    print()
-
-    print("Execution Plan")
+    print("\nExecution Plan:")
     print(response.execution_plan)
 
-    print()
-
-    print("Routing Decision")
+    print("\nRouting Decision:")
     print(response.routing_decision)
 
-    print()
-
-    print("Answer")
+    print("\nAnswer:")
     print(response.answer)
 
-    print()
+    print("\n" + "-" * 100)
+    print("DEBUG INFORMATION")
+    print("-" * 100)
 
-    print("\n--- DEBUG ---")
-    print("Provider:", response.provider)
-    print("Cache Hit:", response.cache_hit)
-    print("Routing Decision:", response.routing_decision)
-    print("--------------")
+    print(f"Provider      : {response.provider}")
+    print(f"Model         : {response.model_name}")
+    print(f"Cache Hit     : {response.cache_hit}")
+    print(f"Latency (ms)  : {response.latency_ms}")
 
-    print("Planned Provider:", response.routing_decision.provider)
-    
-    print()
+    if response.cache_hit:
+        print("\nPipeline:")
+        print("User")
+        print("  ↓")
+        print("Semantic Cache")
+        print("  ↓")
+        print("Returned Cached Response")
 
-    print("Actual Provider:", response.routing_decision.actual_provider)
-   
-    print()
-   
-    print("Fallback Used:", response.routing_decision.fallback_used)
-    
-    print()
+    elif response.routing_decision is not None:
+
+        rd = response.routing_decision
+
+        print("\nPipeline:")
+        print("User")
+        print("  ↓")
+        print("Semantic Cache (MISS)")
+        print("  ↓")
+        print("Planner")
+        print("  ↓")
+        print("Router")
+        print("  ↓")
+        print(f"{rd.provider.value}")
+        print("  ↓")
+        print("Response")
+
+        print("\nPlanned Provider:")
+        print(rd.provider)
+
+        print("\nActual Provider:")
+        print(rd.actual_provider)
+
+        print("\nFallback Used:")
+        print(rd.fallback_used)
+
+        print("\nExpected Latency:")
+        print(rd.expected_latency_ms)
+
+        print("\nRouting Score:")
+        print(rd.score)
+
+        print("\nScore Breakdown:")
+        for key, value in rd.score_breakdown.items():
+            print(f"  {key:15}: {value:.2f}")
+
+        print("\nRouting Reason:")
+        for reason in rd.routing_reason:
+            print(f"  • {reason}")
+
+    else:
+        print("\nRouting Decision: None")
+
+    print("\n")

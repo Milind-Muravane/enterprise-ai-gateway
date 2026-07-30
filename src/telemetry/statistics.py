@@ -7,6 +7,7 @@ Computes provider statistics from telemetry records.
 from src.schemas import (
     Provider,
     ProviderStatistics,
+    ModelName
 )
 
 from src.telemetry.collector import TelemetryCollector
@@ -90,3 +91,33 @@ class StatisticsManager:
 
             success_rate=round(success_rate, 2),
         )
+
+    def predict_latency(self, provider : Provider, model_name : ModelName, history_size : int = 10,) -> float:
+        """
+            Predict the expected latency for a provider/model combination
+            using the average latency of the most recent successful requests.
+        """
+
+        records = [record for record in self.collector.get_records()
+        if (
+            record.provider == provider and record.model_name == model_name and record.success
+            )
+        ]
+
+        if not records:
+            DEFAULT_PROVIDER_LATENCIES = {
+            Provider.GROQ: 800.0,
+            Provider.GEMINI: 1800.0,
+            Provider.OPENAI: 1200.0,
+            }
+
+            return DEFAULT_PROVIDER_LATENCIES.get(provider, 1000.0)
+
+        recent_records = records[-history_size:]
+
+        average_latency = (
+            sum(record.latency_ms for record in recent_records)
+            / len(recent_records)
+        )
+
+        return round(average_latency, 2)

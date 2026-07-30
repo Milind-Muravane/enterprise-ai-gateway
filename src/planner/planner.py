@@ -18,9 +18,9 @@ from src.schemas import (
 class ExecutionPlanner:
     def create_plan(self, analysis : AnalysisResult, estimate: EstimateResult,)-> ExecutionPlan:
         return ExecutionPlan(
-            user_cache = True,
-            user_web_search = analysis.requires_web_search,
-            use_rag = analysis.requires_rag,
+            use_cache=True,
+            use_web_search=analysis.requires_web_search,
+            use_rag=analysis.requires_rag,
             estimated_cost=estimate.estimated_cost,
             estimated_input_tokens=analysis.estimated_input_tokens,
             estimated_output_tokens=estimate.estimated_output_tokens,

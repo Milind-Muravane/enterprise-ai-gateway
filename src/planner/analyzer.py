@@ -33,6 +33,25 @@ class QueryAnalyzer:
             "tomorrow",
         ]
 
+        rag_keywords = [
+            "company",
+            "employee",
+            "handbook",
+            "policy",
+            "policies",
+            "internal",
+            "guideline",
+            "guidelines",
+            "reimbursement",
+            "expense",
+            "travel policy",
+            "leave",
+            "remote work",
+            "procurement",
+            "hr",
+            "manual",
+        ]
+
         reasoning_keywords = [
             "compare",
             "difference",
@@ -89,7 +108,7 @@ class QueryAnalyzer:
         
         requires_reasoning = any(keyword in question_lower for keyword in reasoning_keywords)
 
-        requires_rag = False
+        requires_rag = any(keyword in question_lower for keyword in rag_keywords)
 
 
         #Detecting multiple topics
@@ -126,6 +145,10 @@ class QueryAnalyzer:
         if requires_web_search:
             complexity_score += 1
             reasoning_trace.append("Web search required.")
+
+        if requires_rag:
+            complexity_score += 1
+            reasoning_trace.append("Enterprise knowledge retrieval required.")
 
         if question_count >= 2:
             complexity_score += 1

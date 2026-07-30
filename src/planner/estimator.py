@@ -18,28 +18,43 @@ class RequestEstimator:
 
     def estimate(self, analysis : AnalysisResult) -> EstimateResult:
         #Estimating output tokens 
-        estimated_output_tokens = max(50, analysis.estimated_input_tokens * 2)
+        if analysis.complexity_score <= 2:
+            estimated_output_tokens = 150
+
+        elif analysis.complexity_score <= 4:
+            estimated_output_tokens = 350
+
+        elif analysis.complexity_score <= 6:
+            estimated_output_tokens = 700
+
+        else:
+            estimated_output_tokens = 1200
 
         #deciding cost tier of the model based on the estimated cost
-        if analysis.complexity_score <= 2:
+        if total_tokens < 1000:
             estimated_cost = CostTier.LOW
-        elif analysis.complexity_score <= 4:
+
+        elif total_tokens < 3000:
             estimated_cost = CostTier.MEDIUM
+
         else:
             estimated_cost = CostTier.HIGH
         
         #Estimate latency in ms
-        if estimated_cost == CostTier.LOW:
+        if total_tokens < 1000:
             estimated_latency_ms = 500
-        elif estimated_cost == CostTier.MEDIUM:
+
+        elif total_tokens < 3000:
             estimated_latency_ms = 1500
+
         else:
             estimated_latency_ms = 3000
             
         #Deciding priority 
         if analysis.requires_reasoning:
             priority = "QUALITY"
-        elif analysis.requires_web_search:
+
+        elif analysis.requires_web_search or analysis.requires_rag:
             priority = "BALANCED"
         else:
             priority = "FAST"

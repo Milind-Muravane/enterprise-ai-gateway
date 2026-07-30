@@ -164,11 +164,18 @@ class ProviderScorer:
         plan: ExecutionPlan,
         weights: dict,
     ) -> float:
+        """
+        Calculates a telemetry-based performance score.
+
+        Factors:
+        - Average latency
+        - Success rate
+        - Confidence (based on request count)
+        """
 
         try:
-
             stats = self.telemetry.get_statistics(provider)
-            
+
         except Exception:
             return 0.0
 
@@ -177,29 +184,62 @@ class ProviderScorer:
 
         score = 0.0
 
-        # Lower latency = Higher score
-        if stats.average_latency_ms > 0:
+        # ----------------------------------------------------
+        # Latency Score (0-10)
+        # ----------------------------------------------------
 
-            latency_score = max(
-                0,
-                10 - (stats.average_latency_ms / 500),
-            )
+        latency = stats.average_latency_ms
 
-            score += (
-                latency_score
-                * weights["performance"]
-            )
+        if latency <= 500:
+            latency_score = 10
 
-        # Success rate (0-1 -> 0-10)
+        elif latency <= 1000:
+            latency_score = 8
 
-        score += (
-            stats.success_rate
-            * 10
-            * weights["performance"]
+        elif latency <= 1500:
+            latency_score = 6
+
+        elif latency <= 2500:
+            latency_score = 3
+
+        else:
+            latency_score = 0
+
+        # ----------------------------------------------------
+        # Success Rate Score (0-10)
+        # ----------------------------------------------------
+
+        success_score = stats.success_rate * 10
+
+        # ----------------------------------------------------
+        # Confidence
+        # ----------------------------------------------------
+
+        if stats.request_count >= 20:
+            confidence = 1.0
+
+        elif stats.request_count >= 10:
+            confidence = 0.8
+
+        elif stats.request_count >= 5:
+            confidence = 0.6
+
+        else:
+            confidence = 0.4
+
+        # ----------------------------------------------------
+        # Final Performance Score
+        # ----------------------------------------------------
+
+        score = (
+            latency_score * 0.4
+            + success_score * 0.6
         )
 
-        return score
-
+        return round(
+            score * confidence * weights["performance"],
+            2,
+        )
     # ----------------------------------------------------
     # Cost Score
     # ----------------------------------------------------
