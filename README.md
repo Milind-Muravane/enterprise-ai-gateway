@@ -141,38 +141,13 @@ Built-in debugging utilities display:
 
 # 🏗 Architecture
 
-```
-                    Enterprise AI Gateway
+<p align="center">
+  <img src="assets/architecture.png"
+       alt="Enterprise AI Gateway Architecture"
+       width="100%">
+</p>
 
-                    User Request
-                         │
-                         ▼
-                Query Analyzer
-                         │
-                         ▼
-               Request Estimator
-                         │
-                         ▼
-               Execution Planner
-                         │
-                         ▼
-               Adaptive Router
-                         │
-        ┌────────────────┴────────────────┐
-        ▼                                 ▼
-   Gemini Provider                  Groq Provider
-        │                                 │
-        └──────────────┬──────────────────┘
-                       ▼
-               Telemetry Manager
-                       │
-                       ▼
-               Semantic Cache
-                       │
-                       ▼
-                 Gateway Response
-```
-
+The Enterprise AI Gateway follows a modular, provider-agnostic architecture. A user request is analysed, transformed into an execution plan, adaptively routed to the most suitable LLM provider, and continuously improved through telemetry and semantic caching.
 ---
 
 ## 📂 Project Structure
